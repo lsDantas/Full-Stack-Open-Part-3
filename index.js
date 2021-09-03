@@ -32,9 +32,17 @@ app.post('/api/persons', (req, res) => {
     const body = req.body;
 
     // Reject if Content Missing
-    if(!body) {
+    if (!body.name || !body.number ) {
         return res.status(400).json({
-            error: 'content missing'
+            error: 'Content missing'
+        });
+    }
+
+    // Reject if Contact in List
+    const matchesNewName = (person) => person.name === body.name;
+    if ( persons.some(matchesNewName) ) {
+        return res.status(406).json({
+            error: 'Name must be unique'
         });
     }
 
