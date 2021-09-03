@@ -27,6 +27,30 @@ let persons = [
     }
 ];
 
+// Create Contact
+app.post('/api/persons', (req, res) => {
+    const body = req.body;
+
+    // Reject if Content Missing
+    if(!body) {
+        return res.status(400).json({
+            error: 'content missing'
+        });
+    }
+
+    // Build New Entry
+    const newPerson = {
+        "id": Math.floor(Math.random() * 10000),
+        "name": body.name,
+        "number": body.number,
+    };
+
+    // Update Contacts
+    persons = persons.concat(newPerson);
+
+    res.json(persons);
+});
+
 // Read Contacts
 app.get('/api/persons', (req, res) => {
     res.json(persons);
