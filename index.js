@@ -27,18 +27,30 @@ let persons = [
 ];
 
 // Serve Contacts
-app.get('/api/persons', (request, response) => {
-    response.json(persons);
+app.get('/api/persons', (req, res) => {
+    res.json(persons);
+});
+
+app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const person = persons.find(person => person.id === id);
+
+    if (person) {
+        res.json(person);
+    }
+    else { 
+        res.status(404).end();
+    }
 });
 
 // Inform about Phonebook Contents
-app.get('/info', (request, response) => {
-    const requestReceived = new Date;
+app.get('/info', (req, res) => {
+    const reqReceived = new Date;
     const personsInfo = `Phonebook has info for ${persons.length} people.`;
 
-    const message = `${personsInfo} </br> </br> ${requestReceived}`;
+    const message = `${personsInfo} </br> </br> ${reqReceived}`;
 
-    response.send(message);
+    res.send(message);
 });
 
 const PORT = 3001;
