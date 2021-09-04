@@ -71,16 +71,16 @@ app.get('/api/persons', (req, res) => {
 
 app.get('/api/persons/:id', (req, res) => {
     // Identify Contact
-    const id = Number(req.params.id);
-    const person = persons.find(person => person.id === id);
 
-    // Send Contact if it Exists
-    if (person) {
-        res.json(person);
-    }
-    else { 
-        res.status(404).end();
-    }
+    Person.findById(req.params.id).then(person => {
+        if (person) {
+            res.json(person);
+        }
+        else {
+            res.status(404).end()
+        }
+    })
+    .catch(error => next(error));
 });
 
 // Update Contact
@@ -111,11 +111,13 @@ app.delete('/api/persons/:id', (req, res, next) => {
 // Inform about Phonebook Contents
 app.get('/info', (req, res) => {
     const reqReceived = new Date;
-    const personsInfo = `Phonebook has info for ${persons.length} people.`;
 
-    const message = `${personsInfo} </br> </br> ${reqReceived}`;
+    Person.find({}).then(persons => {
+        const personsInfo = `Phonebook has info for ${persons.length} people.`;
+        const message = `${personsInfo} </br> </br> ${reqReceived}`;
 
-    res.send(message);
+        res.send(message);
+    });
 });
 
 const errorHandler = (error, req, res, next) => {
