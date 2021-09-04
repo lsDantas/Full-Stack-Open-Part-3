@@ -39,7 +39,7 @@ let persons = [
 ];
 
 // Create Contact
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body;
 
     // Reject if Content Missing
@@ -56,10 +56,12 @@ app.post('/api/persons', (req, res) => {
     });
 
     // Update Contacts
-    person.save().then(savedPerson => {
-        res.json(savedPerson);
-        persons = persons.concat(savedPerson);
-    });
+    person.save()
+        .then(savedPerson => {
+            res.json(savedPerson);
+            persons = persons.concat(savedPerson);
+        })
+        .catch(error => next(error));
 });
 
 // Read Contacts
@@ -125,6 +127,11 @@ const errorHandler = (error, req, res, next) => {
 
     if (error.name === 'CastError') {
         return res.status(400).send({ error: 'Malformatted id'});
+    }
+    else {
+        if (error.name === 'ValidationError') {
+            res.status(400).json({ error: error.message });
+        }
     }
 
     next(error);

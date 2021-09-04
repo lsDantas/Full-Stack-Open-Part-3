@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
 
 // Connect to Database
 const dbURL = process.env.MONGODB_URI;
@@ -14,8 +15,15 @@ mongoose.connect(dbURL)
 
 // Create Schema
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String
+    name: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    number: {
+        type: String,
+        required: true
+    } 
 });
 
 personSchema.set('toJSON', {
