@@ -85,18 +85,12 @@ app.get('/api/persons/:id', (req, res) => {
 });
 
 // Delete Contact
-app.delete('/api/persons/:id', (req, res) => {
-    // Identify Contact
-    const id = Number(req.params.id);
-    const person = persons.find(person => person.id === id);
-
-    // Remove Contact if it Exists
-    if (person) { 
-        persons = persons.filter(person => person.id !== id);
-    }
-    
-    // Respond with 204 regardless of result
-    res.status(204).end()
+app.delete('/api/persons/:id', (req, res, next) => {
+    Person.findByIdAndRemove(req.params.id)
+        .then(result => {
+            res.status(204).end();
+        })
+        .catch(error => next(error));
 });
 
 // Inform about Phonebook Contents
