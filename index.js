@@ -2,7 +2,6 @@ require('dotenv').config();
 
 const { response } = require('express');
 const express = require('express');
-
 const cors = require('cors')
 var morgan = require('morgan');
 
@@ -102,6 +101,18 @@ app.get('/info', (req, res) => {
 
     res.send(message);
 });
+
+const errorHandler = (error, req, res, next) => {
+    console.error(`Error Handler Running\n-------START-------\n\n${error.message}\n \n---------END---------`);
+
+    if (error.name === 'CastError') {
+        return res.status(400).send({ error: 'Malformatted id'});
+    }
+
+    next(error);
+}
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
