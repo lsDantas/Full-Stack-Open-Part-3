@@ -50,25 +50,17 @@ app.post('/api/persons', (req, res) => {
         });
     }
 
-    // Reject if Contact in List
-    const matchesNewName = (person) => person.name === body.name;
-    if ( persons.some(matchesNewName) ) {
-        return res.status(406).json({
-            error: 'Name must be unique'
-        });
-    }
-
     // Build New Entry
-    const newPerson = {
-        "id": Math.floor(Math.random() * 10000),
-        "name": body.name,
-        "number": body.number,
-    };
+    const person = new Person({
+        name: body.name,
+        number: body.number,
+    });
 
     // Update Contacts
-    persons = persons.concat(newPerson);
-
-    res.json(persons);
+    person.save().then(savedPerson => {
+        res.json(savedPerson);
+        persons = persons.concat(savedPerson);
+    });
 });
 
 // Read Contacts
