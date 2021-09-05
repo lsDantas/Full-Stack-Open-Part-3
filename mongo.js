@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Verify Commands
 if (process.argv.length < 3) {
-    console.log("Please provide the password as an argument: node mongo.js <password>");
+    console.log('Please provide the password as an argument: node mongo.js <password>');
 }
 else {
     // Setup Database
@@ -16,22 +16,22 @@ else {
         number: String
     });
 
-    const Person = mongoose.model("Person", personSchema);
+    const Person = mongoose.model('Person', personSchema);
 
     
-    if (process.argv.length == 3) {
+    if (process.argv.length === 3) {
         // Display Contacts in Database
         Person.find({}).then(result => {
-            console.log("phonebook");
+            console.log('phonebook');
             result.forEach(person => {
                 console.log(`${person.name} ${person.number}`);
-            })
-            mongoose.connection.close()
+            });
+            mongoose.connection.close();
         })
     }
     else {
         // Add New Contact
-        if (process.argv.length == 5 ) {
+        if (process.argv.length === 5 ) {
             
             const person = new Person({
                 name: process.argv[3],
@@ -41,7 +41,7 @@ else {
             // Save New Entry
             person.save().then(result => {
                 console.log(`Added ${person.name} number ${person.number} to phonebook`);
-                mongoose.connection.close()
+                mongoose.connection.close();
             });
         }
     }

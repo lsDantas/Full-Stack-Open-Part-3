@@ -2,39 +2,39 @@ require('dotenv').config();
 
 const { response } = require('express');
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 var morgan = require('morgan');
 
 const app = express();
 const Person = require('./models/person');
 
 app.use(express.json());
-app.use(express.static('build'))
-app.use(cors())
+app.use(express.static('build'));
+app.use(cors());
 
 morgan.token('data', (req, res) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'));
 
 let persons = [
     {
-        "id": 1,
-        "name": "Arto Hellas",
-        "number": "040-123456"
+        'id': 1,
+        'name': 'Arto Hellas',
+        'number': '040-123456'
     },
     {
-        "id": 2,
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523"
+        'id': 2,
+        'name': 'Ada Lovelace',
+        'number': '39-44-5323523'
     },
     {
-        "id": 3,
-        "name": "Dan Abramov",
-        "number": "12-43-234345"
+        'id': 3,
+        'name': 'Dan Abramov',
+        'number': '12-43-234345'
     },
     {
-        "id": 4,
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122"
+        'id': 4,
+        'name': 'Mary Poppendieck',
+        'number': '39-23-6423122'
     }
 ];
 
@@ -71,18 +71,19 @@ app.get('/api/persons', (req, res) => {
     });
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     // Identify Contact
 
-    Person.findById(req.params.id).then(person => {
-        if (person) {
-            res.json(person);
-        }
-        else {
-            res.status(404).end()
-        }
-    })
-    .catch(error => next(error));
+    Person.findById(req.params.id)
+        .then(person => {
+            if (person) {
+                res.json(person);
+            }
+            else {
+                res.status(404).end();
+            }
+        })
+        .catch(error => next(error));
 });
 
 // Update Contact
@@ -104,7 +105,7 @@ app.put('/api/persons/:id', (req, res, next) => {
 // Delete Contact
 app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndRemove(req.params.id)
-        .then(result => {
+        .then( result => {
             res.status(204).end();
         })
         .catch(error => next(error));
@@ -135,7 +136,7 @@ const errorHandler = (error, req, res, next) => {
     }
 
     next(error);
-}
+};
 
 app.use(errorHandler);
 
